@@ -24,5 +24,6 @@ gem 'flog'
 gem 'reek'
 gem 'rubocop'
 
-# Job API
+# External APIs
 gem 'careerjet-api-client'
+gem 'curb'
