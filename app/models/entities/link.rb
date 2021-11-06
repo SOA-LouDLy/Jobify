@@ -6,11 +6,11 @@ require 'dry-struct'
 module Jobify
   module Entity
     # Skill Entity
-    class Skill < Dry::Struct
+    class Link < Dry::Struct
       include Dry.types
       
       attribute :id, Integer.optional
-      attribute :name, Strict::String
+      attribute :url, Strict::String
 
       def to_attr_hash
         to_hash.reject {|key, _| [:id].include? key}

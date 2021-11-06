@@ -4,11 +4,10 @@ Sequel.migration do
   change do
     create_table(:jobs) do
       primary_key :id
-      foreign_key :skill_id, :skills
+      foreign_key :link_id, :links
 
       String      :title null:false
       String      :date
-      String      :url
       String      :description
       String      :company
       String      :locations
