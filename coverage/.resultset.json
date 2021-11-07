@@ -1,0 +1,26 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/home/billy/Jobify/lib/resume_info.rb": {
+        "lines": [
+          null,
+          null,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1
+        ]
+      }
+    },
+    "timestamp": 1635937042
+  }
+}
