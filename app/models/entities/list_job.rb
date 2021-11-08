@@ -2,15 +2,16 @@
 
 require 'dry-types'
 require 'dry-struct'
+require_relative 'job'
 
 module Jobify
   module Entity
-    # Skill Entity
-    class Link < Dry::Struct
+    # ListJob Entity
+    class ListJob < Dry::Struct
       include Dry.types
       
       attribute :id, Integer.optional
-      attribute :url, Strict::String
+      attribute :jobs, Strict::Array.of(Job)
 
       def to_attr_hash
         to_hash.reject {|key, _| [:id].include? key}

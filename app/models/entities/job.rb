@@ -14,7 +14,7 @@ module Jobify
       attribute :description,   Strict::String
       attribute :company,       Strict::String
       attribute :locations,     Strict::String
-      attribute :url,           Link
+      attribute :url,           Strict::String
 
       def to_attr_hash
         to_hash.reject {|key, _| %i[id].include? key}
