@@ -48,7 +48,7 @@ module Jobify
     end
 
     def phone_numbers
-      @resume['phoneNumbers']['sectionType']
+      @resume['phoneNumbers']
     end
 
     def sections
