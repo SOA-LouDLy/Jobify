@@ -2,4 +2,4 @@ config/secrets.yml
 coverage/*
 !coverage/.resultset.json
 _snippets/
-spec/fixtures/job_results.yml
+spec/fixtures/resumes_result.yml
