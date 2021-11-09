@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'curb'
 require 'yaml'
 require 'http'
