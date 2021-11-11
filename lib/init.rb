@@ -1,8 +1,5 @@
-# frozen_string_literal: false
-
-%w[entities gateways_affinda gateways_careerjet mappers]
-  .each do |folder|
-  Dir.glob("#{__dir__}/#{folder}/**/*.rb").each do |ruby_file|
-    require_relative ruby_file
-  end
-end
+require_relative 'education'
+require_relative 'resume'
+require_relative 'section'
+require_relative 'skill'
+require_relative 'work'
