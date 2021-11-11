@@ -24,5 +24,5 @@ gem 'flog'
 gem 'reek'
 gem 'rubocop'
 
-# Job API
+# CareerJet API Gem
 gem 'careerjet-api-client'

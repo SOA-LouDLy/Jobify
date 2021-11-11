@@ -10,14 +10,16 @@ require 'minitest/rg'
 require 'vcr'
 require 'webmock'
 
-require_relative '../lib/resume_api'
+require 'careerjet/api_client'
 
-FILE = 'lib/resume.pdf'
+require_relative '../init'
+
+SKILL = 'ruby'
+LOCATION = 'london'
 CONFIG = YAML.safe_load(File.read('config/secrets.yml'))
-RESUME_TOKEN = CONFIG['RESUME_TOKEN']
-
-GOOD = YAML.safe_load(File.read('spec/fixtures/resumes_result.yml'))
-DATA = GOOD['data']
+JOB_TOKEN = CONFIG['API_KEY']
+CORRECT = YAML.safe_load(File.read('spec/fixtures/carrerjet_results.yml'),
+                         permitted_classes: [Careerjet::Mash, Hashie::Array])
 
 CASSETTES_FOLDER = 'spec/fixtures/cassettes'
-CASSETTE_FILE = 'affinda_api'
+CASSETTE_FILE = 'job_api'
