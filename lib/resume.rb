@@ -40,7 +40,7 @@ module Jobify
     end
 
     def name
-      @resume['raw']
+      @resume['name']['raw']
     end
 
     def objective

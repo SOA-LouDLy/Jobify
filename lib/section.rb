@@ -8,7 +8,7 @@ module Jobify
     end
 
     def section_type
-      section['sectionType']
+      @section['sectionType']
     end
 
     def text

@@ -1,0 +1,5 @@
+require_relative 'education'
+require_relative 'resume'
+require_relative 'section'
+require_relative 'skill'
+require_relative 'work'
