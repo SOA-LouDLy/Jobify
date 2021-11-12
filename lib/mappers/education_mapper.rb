@@ -1,10 +1,10 @@
 # frozen_string_literal: false
 
 module Jobify
-  # Mapper to transform skill to a skill entity
+  # Mapper to transform section to a section entity
   module Affinda
-    # Data Mapper: Skill -> Skill entity
-    class SkillMapper
+    # Data Mapper: Section -> Section entity
+    class EducationMapper
       def initialize(cv_token, gateway_class = Affinda::Api)
         @key = cv_token
         @gateway_class = gateway_class
@@ -12,7 +12,7 @@ module Jobify
       end
 
       def self.build_entity(data)
-        DataMapper.new(data).build_entity
+        DataMapper.new(data, @key, @gateway_class).build_entity
       end
 
       # Extracts entity specific elements from data structure
@@ -22,7 +22,7 @@ module Jobify
         end
 
         def build_entity
-          Jobify::Entity::Skill.new(
+          Jobify::Entity::Education.new(
             organization: organization,
             accreditation: accreditation,
             grade: grade,

@@ -26,3 +26,4 @@ gem 'rubocop'
 
 # CareerJet API Gem
 gem 'careerjet-api-client'
+gem 'rubocop-lsp'

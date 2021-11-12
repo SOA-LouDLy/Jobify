@@ -4,7 +4,7 @@ module Jobify
   # Mapper to transform skill to a skill entity
   module Affinda
     # Data Mapper: Skill -> Skill entity
-    class SkillMapper
+    class WorkExperienceMapper
       def initialize(cv_token, gateway_class = Affinda::Api)
         @key = cv_token
         @gateway_class = gateway_class
@@ -22,36 +22,38 @@ module Jobify
         end
 
         def build_entity
-          Jobify::Entity::Skill.new(
+          Jobify::Entity::WorkExperience.new(
+            job_title: job_title,
             organization: organization,
-            accreditation: accreditation,
-            grade: grade,
             formatted_location: formatted_location,
+            country: country,
             raw_location: raw_location,
             dates: dates,
             starting_date: starting_date,
-            end_date: end_date
+            end_date: end_date,
+            months_in_position: months_in_position,
+            description: description
           )
+        end
+
+        def job_title
+          @data['jobTitle']
         end
 
         def organization
           @data['organization']
         end
 
-        def accreditation
-          @data['accreditation']['inputStr']
-        end
-
-        def grade
-          @data['grade']
-        end
-
         def formatted_location
           @data['location']['formatted']
         end
 
+        def country
+          @data['location']['country']
+        end
+
         def raw_location
-          @data['location']['rawInput']
+          @data['rawInput']
         end
 
         def dates
@@ -63,7 +65,15 @@ module Jobify
         end
 
         def end_date
-          dates['completionDate']
+          dates['endDate']
+        end
+
+        def months_in_position
+          dates['monthsInPosition']
+        end
+
+        def description
+          @data['jobDescription']
         end
       end
     end
