@@ -8,7 +8,7 @@ module Jobify
       def initialize(cv_token, gateway_class = Affinda::Api)
         @key = cv_token
         @gateway_class = gateway_class
-        @gateway = @gateway_class.new(@key)
+        # @gateway = @gateway_class.new(@key)
       end
 
       def self.build_entity(data)
