@@ -1,0 +1,158 @@
+html
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    meta name="author" content="Loudwige Odice, Billy Malherbe and Thierry Marcelin"
+    title Jobify 
+    == assets([:css, :format2])
+
+    link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet" type="text/css" /
+    link href="https://fonts.googleapis.com/css?family=Raleway:100" rel="stylesheet" type="text/css" /
+    link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css" /
+    script {
+      src="https://kit.fontawesome.com/d460f5a1d0.js" 
+      crossorigin="anonymous"
+    }
+ 
+
+  body
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+      a.navbar-brand.mb-0.px-3 href="/"
+        h2
+          | Jobify
+    .A4
+      .analysis 
+      h2.text-center.mt-3
+        | Full Analysis of Resume 
+      br/
+      ul.list-group.list-group-flush.px-3.nice
+        - arr = analysis.split("\n")
+        - score = arr.pop.to_i
+        - arr&.each do |line|
+          li.list-group-item
+            = line
+      h3.mr-3.right style="text-align:right;" 
+        | Final Score: 
+        = score
+      - if score >= 90
+        p.bigger style="text-align:right;" &#128588;
+      - if score >= 80 and score < 90
+        p.bigger style="text-align:right;" &#128077;
+      - if score >= 70 and score < 80
+        p.bigger style="text-align:right;" &#128578;
+      - if score >= 60 and score < 70
+        p.bigger style="text-align:right;" &#128549;
+      - if score < 60
+        p.bigger style="text-align:right;" &#128557;
+        
+      .sheet
+        .two-column.resume
+          section.resume__section.resume__header
+            .resume__content
+              h1 
+                = resume.name
+              .info-item
+                span.info-label
+                  i.fa.fa-location-arrow
+                span.info-text
+                  = resume.location
+              - resume.emails.each do |email|
+                .info-item
+                  span.info-label
+                    i.fa.fa-envelope
+                  span.info-text 
+                     = email.email
+              - resume.phone_numbers.each do |phone|
+                .info-item
+                  span.info-label
+                    i.fa.fa-phone
+                  span.info-text 
+                    = phone.number
+
+          .resume__columns
+            .resume__main
+              section.resume__section.resume__summary
+                .resume__content
+                  .resume__section-title
+                    i.fa.fa-pencil-square-o
+                    h2 Professional Summary
+                  .other
+                    .other-info
+                      p
+                        = resume.summary[0..150]
+              section.resume__section.resume__experience
+                .resume__content
+                  .resume__section-title
+                    i.fa.fa-briefcase
+                    h2 Employment History
+                  - resume.works.each do | work |
+                    .xp-item(style='margin-bottom: 1em')
+                      .xp-job(style='margin-bottom: 1em')
+                        = work.job_title
+                        =" @ #{work.organization}"
+                      small.x 
+                        = "#{work.formatted_location}"
+                    .xp-date 
+                      = "#{work.starting_date} - #{work.end_date}"
+                    .xp-detail
+                      ul
+                        - work.description.split("\n").each do |line|
+                          li 
+                            = line
+
+              section.resume__section.resume__experience
+                .resume__content
+                  .resume__section-title
+                    i.fas.fa-university
+                    h2 Education
+                  - resume.education.each do | education |
+                    .xp-item(style='margin-bottom: 0.5em')
+                      .xp-job(style='margin-bottom: 0.5em')
+                        = education.accreditation
+                        =" @ #{education.organization}"
+                      small 
+                        = "#{education.formatted_location}"
+                    .xp-date 
+                      = "#{education.starting_date} - #{education.end_date}"
+                  / .xp-detail
+                  /   ul
+                  /     - work.description.split("\n").each do |line|
+                  /       li 
+                  /         = line
+                        
+            .resume__side
+              section.resume__section.resume__skills
+                .resume__content
+                  .resume__section-title
+                    i.fa.fa-align-center
+                    h2 Skills
+                  .resume__text
+                    - resume.skills.each do |skill|
+                      .extra
+                        .extra-info
+                          = skill.name
+                      .extra-details
+                        .extra-details__progress(style='width:90%')
+                  
+              section.resume__section.resume__languages
+                .resume__content
+                  .resume__section-title
+                    i.fa.fa-globe
+                    h2 Languages
+                  - resume.languages.each do |language|
+                    .extra
+                      .extra-info 
+                        = language.name
+                      .extra-details
+                        .extra-details__progress(style='width:100%')
+  javascript:
+        $( "#analysis_resume" ).click(function() {
+          $(".analysis").show()
+        });
+        $( ".show_resume" ).click(function(){
+          $(".analysis").hide()
+        })
+
+                
+
+
