@@ -8,7 +8,7 @@ end
 
 desc 'Run tests once'
 Rake::TestTask.new(:spec) do |t|
-  t.pattern = 'spec/*_spec.rb'
+  t.pattern = 'spec/tests/{integration,unit}/**/*_spec.rb'
   t.warning = false
 end
 
@@ -20,6 +20,12 @@ end
 desc 'Keep rerunning tests upon changes'
 task :respec do
   sh "rerun -c 'rake spec' --ignore 'coverage/*'"
+end
+
+desc 'Run acceptance tests'
+task :spec_accept do
+  puts 'NOTE: run `rake run:test` in another process'
+  sh 'ruby spec/tests/acceptance/acceptance_spec_.rb'
 end
 
 desc 'Keep restarting web app upon changes'
@@ -53,6 +59,7 @@ namespace :db do
       puts 'Do not damage production database!'
       return
     end
+    require_relative 'app/infrastructure/database/init'
     require_relative 'spec/helpers/database_helper'
     DatabaseHelper.wipe_database
   end
