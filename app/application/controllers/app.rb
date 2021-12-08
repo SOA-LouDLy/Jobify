@@ -92,20 +92,20 @@ module Jobify
           resume_analysis = Views::ResumeAnalysis.new(resume, analysis)
           view 'format1', locals: { analysis: resume_analysis }
         end
+      end
 
-        routing.on 'format2' do
-          routing.on String do |identifier|
-            resume_made = Service::GetResume.new.call(identifier)
-            routing.redirect '/' if resume_made.failure?
+      routing.on 'format2' do
+        routing.on String do |identifier|
+          resume_made = Service::GetResume.new.call(identifier)
+          routing.redirect '/' if resume_made.failure?
 
-            resume = resume_made.value!
-            analysis = Mapper::Analysis.new(resume).analysis
+          resume = resume_made.value!
+          analysis = Mapper::Analysis.new(resume).analysis
 
-            routing.redirect '/' if analysis.nil?
+          routing.redirect '/' if analysis.nil?
 
-            resume_analysis = Views::ResumeAnalysis.new(resume, analysis)
-            view 'format2', locals: { analysis: resume_analysis }
-          end
+          resume_analysis = Views::ResumeAnalysis.new(resume, analysis)
+          view 'format2', locals: { analysis: resume_analysis }
         end
       end
     end
