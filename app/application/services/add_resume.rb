@@ -9,32 +9,27 @@ module Jobify
       include Dry::Transaction
 
       # step :check_entered_file
-      step :upload_resume
-      step :store_resume
+      step :request_resume
+      step :reify_resume
 
       private
 
-      def upload_resume(input, api: Jobify::Affinda::Api)
-        resume = resume_from_affinda(input, api)
-        Success(resume)
+      def request_resume(input)
+        result = Gateway::Api.new(Jobify::App.config)
+          .add_resume(input)
+
+        result.success? ? Success(result.payload) : Failure(result.message)
       rescue StandardError => e
-        Failure(e.to_s)
+        puts "#{e.inspect} + '\n' + #{e.backtrace}"
+        Failure('Cannot add resumes right now; please try again later')
       end
 
-      def store_resume(input)
-        resume = Repository::For.entity(input).create(input)
-        Success(resume)
-      rescue StandardError => e
-        puts e.backtrace.join("\n")
-        Failure('Having trouble accessing the database')
-      end
-
-      def resume_from_affinda(input, api)
-        Affinda::ResumeMapper
-          .new(App.config.RESUME_TOKEN, api)
-          .resume(input)
+      def reify_resume(resume_json)
+        Representer::Resume.new(OpenStruct.new)
+          .from_json(resume_json)
+          .then { |resume| Success(resume) }
       rescue StandardError
-        raise 'Free parsing over'
+        Failure('Error in the resume -- please try again')
       end
     end
   end
