@@ -10,27 +10,18 @@ module Jobify
   # Configuration for the App
   class App < Roda
     plugin :environments
+    # Environment variables setup
+    Figaro.application = Figaro::Application.new(
+      environment: environment,
+      path: File.expand_path('config/secrets.yml')
+    )
+    Figaro.load
+    def self.config() = Figaro.env
 
-    # rubocop:disable Lint/ConstantDefinitionInBlock
-    configure do
-      # Environment variables setup
-      Figaro.application = Figaro::Application.new(
-        environment: environment,
-        path: File.expand_path('config/secrets.yml')
-      )
-      Figaro.load
-      def self.config() = Figaro.env
+    use Rack::Session::Cookie, secret: config.SESSION_SECRET
 
-      use Rack::Session::Cookie, secret: config.SESSION_SECRET
-
-      configure :development, :test do
-        ENV['DATABASE_URL'] = "sqlite://#{config.DB_FILENAME}"
-      end
-
-      # Database Setup
-      DB = Sequel.connect(ENV['DATABASE_URL'])
-      def self.DB() = DB # rubocop:disable Naming/MethodName
+    configure :development, :test, :app_test do
+      require 'pry'
     end
-    # rubocop:enable Lint/ConstantDefinitionInBlock
   end
 end
