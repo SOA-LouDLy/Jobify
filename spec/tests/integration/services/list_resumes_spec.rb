@@ -1,74 +1,27 @@
 # frozen_string_literal: true
 
 require_relative '../../../helpers/spec_helper'
-require_relative '../../../helpers/vcr_helper'
-require_relative '../../../helpers/database_helper'
+describe 'Integration test of ListResumes service and API gateway' do
+  it 'must return a list of resumes' do
+    # WHEN we request a list of reesumes
+    resume_made = Jobify::Service::AddResume.new.call(FILE)
+    list = [resume_made.value!.identifier]
+    res = Jobify::Service::ListResumes.new.call(list)
 
-require 'ostruct'
-
-describe 'AddResume Service Integration Test' do
-  VcrHelper.setup_vcr
-
-  before do
-    VcrHelper.configure_vcr_for_resume
+    # THEN we should see a single project in the list
+    _(res.success?).must_equal true
+    list = res.value!
+    _(list.resumes.count).must_equal 1
+    _(list.resumes.first.name).must_equal NAME
   end
+  it 'must return and empty list if we specify none' do
+    # WHEN we request a list of projects
+    list = []
+    res = Jobify::Service::ListResumes.new.call(list)
 
-  after do
-    VcrHelper.eject_vcr
-  end
-
-  describe 'Analyse a Resume' do
-    before do
-      DatabaseHelper.wipe_database
-    end
-
-    it 'HAPPY: should return resumes that are being watched' do
-      # GIVEN: a valid resume exists locally and is being watched
-      resume = Jobify::Affinda::ResumeMapper.new(RESUME_TOKEN, Jobify::Affinda::LocalApi)
-        .resume(FILE)
-      db_resume = Jobify::Repository::For.entity(resume)
-        .create(resume)
-
-      watched_list = [resume.identifier]
-
-      # WHEN: we request a list of all watched resumes
-      result = Jobify::Service::ListResumes.new.call(watched_list)
-
-      # THEN: we should see our resume in the resulting list
-      _(result.success?).must_equal true
-      resumes = result.value!
-      _(resumes[0].identifier).must_equal db_resume.identifier
-    end
-
-    it 'HAPPY: should not return resumes that are not being watched' do
-      # GIVEN: a valid resume exists locally but is not being watched
-      resume = Jobify::Affinda::ResumeMapper.new(RESUME_TOKEN, Jobify::Affinda::LocalApi)
-        .resume(FILE)
-      Jobify::Repository::For.entity(resume)
-        .create(resume)
-
-      watched_list = []
-
-      # WHEN: we request a list of all watched resumes
-      result = Jobify::Service::ListResumes.new.call(watched_list)
-
-      # THEN: it should return an empty list
-      _(result.success?).must_equal true
-      resumes = result.value!
-      _(resumes).must_equal []
-    end
-
-    it 'SAD: should not watched resumes if they are not loaded' do
-      # GIVEN: we are watching a resume that does not exist locally
-      watched_list = [IDENTIFIER]
-
-      # WHEN: we request a list of all watched resumes
-      result = Jobify::Service::ListResumes.new.call(watched_list)
-
-      # THEN: it should return an empty list
-      _(result.success?).must_equal true
-      resumes = result.value!
-      _(resumes).must_equal []
-    end
+    # THEN we should see a no projects in the list
+    _(res.success?).must_equal true
+    list = res.value!
+    _(list.resumes.count).must_equal 0
   end
 end

@@ -21,6 +21,7 @@ module Jobify
 
     use Rack::MethodOverride # for other HTTP verbs (with plugin all_verbs)
 
+    # rubocop:disable Metrics/BlockLength
     route do |routing|
       routing.assets # load CSS
       routing.public
@@ -35,7 +36,7 @@ module Jobify
         if result.failure?
           viewable_resume = []
         else
-          resumes = result.value!
+          resumes = result.value!.resumes
           session[:watching] = resumes.map(&:identifier)
           viewable_resume = Views::ResumesList.new(resumes)
         end
@@ -65,12 +66,7 @@ module Jobify
         routing.on String do |identifier|
           # GET /formats/{identifier}
           routing.get do
-            resume_made = Service::GetResume.new.call(identifier)
-            routing.redirect '/' if resume_made.failure?
-
-            resume = resume_made.value!
-
-            view 'formats', locals: { identifier: resume.identifier }
+            view 'formats', locals: { identifier: identifier }
           end
         end
       end
@@ -82,32 +78,43 @@ module Jobify
 
             routing.redirect '/'
           end
-          resume_made = Service::GetResume.new.call(identifier)
-          routing.redirect '/' if resume_made.failure?
-          resume = resume_made.value!
-          analysis = Mapper::Analysis.new(resume).analysis
+          result = Service::AnalyseResume.new.call(
+            watched_list: session[:watching],
+            identifier: identifier
+          )
+          routing.redirect '/' if result.failure?
 
-          routing.redirect '/' if analysis.nil?
+          analyzed = result.value!
 
-          resume_analysis = Views::ResumeAnalysis.new(resume, analysis)
+          routing.redirect '/' if analyzed.nil?
+
+          puts analyzed
+          resume_analysis = Views::ResumeAnalysis.new(
+            analyzed[:resume], analyzed[:analysis]
+          )
           view 'format1', locals: { analysis: resume_analysis }
         end
       end
 
       routing.on 'format2' do
         routing.on String do |identifier|
-          resume_made = Service::GetResume.new.call(identifier)
-          routing.redirect '/' if resume_made.failure?
+          result = Service::AnalyseResume.new.call(
+            watched_list: session[:watching],
+            identifier: identifier
+          )
+          routing.redirect '/' if result.failure?
 
-          resume = resume_made.value!
-          analysis = Mapper::Analysis.new(resume).analysis
+          analyzed = result.value!
 
-          routing.redirect '/' if analysis.nil?
+          routing.redirect '/' if analyzed.nil?
 
-          resume_analysis = Views::ResumeAnalysis.new(resume, analysis)
+          resume_analysis = Views::ResumeAnalysis.new(
+            analyzed[:resume], analyzed[:analysis]
+          )
           view 'format2', locals: { analysis: resume_analysis }
         end
       end
     end
   end
+  # rubocop:enable Metrics/BlockLength
 end
