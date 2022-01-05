@@ -88,6 +88,7 @@ module Jobify
 
           routing.redirect '/' if analyzed.nil?
 
+          puts analyzed
           resume_analysis = Views::ResumeAnalysis.new(
             analyzed[:resume], analyzed[:analysis]
           )
@@ -102,7 +103,9 @@ module Jobify
             identifier: identifier
           )
           routing.redirect '/' if result.failure?
+
           analyzed = result.value!
+
           routing.redirect '/' if analyzed.nil?
 
           resume_analysis = Views::ResumeAnalysis.new(
