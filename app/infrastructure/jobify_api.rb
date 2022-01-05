@@ -34,8 +34,8 @@ module Jobify
       # HTTP request transmitter
       class Request
         def initialize(config)
-          @api_host = config.APP_HOST
-          @api_root = "#{config.APP_HOST}/api/v1"
+          @api_host = config.API_HOST
+          @api_root = "#{config.API_HOST}/api/v1"
         end
 
         def get_root # rubocop:disable Naming/AccessorMethodName
