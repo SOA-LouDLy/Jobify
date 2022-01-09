@@ -69,8 +69,6 @@ module Jobify
           routing.get do
             # resume = JSON.parse(routing.body.read)
             resume_made = Service::RetrieveResume.new.call(id)
-            # require 'pry'
-            # binding.pry
             routing.redirect '/' if resume_made.failure?
 
             resume = resume_made.value!

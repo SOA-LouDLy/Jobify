@@ -10,7 +10,9 @@ module Jobify
       # step :check_entered_file
       step :request_resume
       step :reify_request
+
       private
+
       def request_resume(input)
         result = Gateway::Api.new(Jobify::App.config)
           .add_resume(input)
@@ -19,6 +21,7 @@ module Jobify
         puts "#{e.inspect} + '\n' + #{e.backtrace}"
         Failure('Cannot add resumes right now; please try again later')
       end
+
       def reify_request(request_json)
         Representer::UploadRequest.new(OpenStruct.new)
           .from_json(request_json)
