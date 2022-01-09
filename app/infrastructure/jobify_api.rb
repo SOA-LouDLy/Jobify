@@ -27,6 +27,10 @@ module Jobify
         @request.add_resume(resume)
       end
 
+      def retrieve_resume(id)
+        @request.retrieve_resume(id)
+      end
+
       def analyse_resume(identifier)
         @request.analyse_resume(identifier)
       end
@@ -53,6 +57,10 @@ module Jobify
 
         def analyse_resume(identifier)
           call_api('get', ['resumes', identifier])
+        end
+
+        def retrieve_resume(id)
+          call_api('get', ['resumes', id])
         end
 
         # Add function to be able to get analysis from API

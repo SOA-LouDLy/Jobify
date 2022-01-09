@@ -1,0 +1,60 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    meta name="author" content="Loudwige Odice, Billy Malherbe and Thierry Marcelin"
+    title Jobify 
+    == assets([:css, :loading])
+
+    / Bootstrap CSS and theme (United Theme)
+    link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet" type="text/css" /
+    link href="https://fonts.googleapis.com/css?family=Raleway:100" rel="stylesheet" type="text/css" /
+    link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css" /
+    script {
+      src="https://kit.fontawesome.com/d460f5a1d0.js" 
+      crossorigin="anonymous"
+    }
+      
+  body
+    / Popper
+    script{ 
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous" 
+    }
+
+    / Bootstrap
+    script{
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    }
+
+    / jQuery
+    script{
+      src="https://code.jquery.com/jquery-3.6.0.min.js" 
+      crossorigin="anonymous"
+    }
+    script src = "#{processing.ws_javascript}"
+    javascript: 
+      var url = "formats/#{processing.resume}";
+      var channel = "#{processing.ws_channel_id}";
+      var client = new Faye.Client("#{processing.ws_route}");
+      client.subscribe('/' + channel, function(message){
+          if(message == "100"){
+              setTimeout(function(){
+                window.location = url
+              }, 1000); 
+          }
+      });
+    .container
+      .loader
+        .loader--dot
+        .loader--dot
+        .loader--dot
+        .loader--dot
+        .loader--dot
+        .loader--dot
+        .loader--text
+    

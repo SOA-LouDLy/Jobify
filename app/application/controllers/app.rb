@@ -12,6 +12,7 @@ module Jobify
     plugin :assets, path: 'app/presentation/assets',
                     css: { format1: 'format1.css',
                            format2: 'format2.css',
+                           loading: 'loading.css',
                            layout: 'style.css',
                            formats: 'formats.css' }, js: 'table_row_click.js'
     plugin :halt
@@ -53,7 +54,23 @@ module Jobify
                    (name = routing[:file][:filename])
             end
             warn "Uploading file, original name #{name.inspect}"
-            resume_made = Service::AddResume.new.call(tmpfile)
+            request_made = Service::AddResume.new.call(tmpfile)
+            routing.redirect '/' if request_made.failure?
+
+            request = OpenStruct.new(request_made.value!)
+            processing = Views::RequestProcessing.new(
+              App.config, request
+            )
+            view 'loading', locals: { processing: processing }
+          end
+        end
+
+        routing.on Integer do |id|
+          routing.get do
+            # resume = JSON.parse(routing.body.read)
+            resume_made = Service::RetrieveResume.new.call(id)
+            # require 'pry'
+            # binding.pry
             routing.redirect '/' if resume_made.failure?
 
             resume = resume_made.value!

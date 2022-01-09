@@ -15,7 +15,7 @@ describe 'Integration test of ListResumes service and API gateway' do
     _(list.resumes.first.name).must_equal NAME
   end
   it 'must return and empty list if we specify none' do
-    # WHEN we request a list of projects
+    # WHEN we request a list of resumes
     list = []
     res = Jobify::Service::ListResumes.new.call(list)
 
